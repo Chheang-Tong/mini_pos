@@ -1,0 +1,68 @@
+name: minipos_app
+description: "A new Flutter project."
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.8.1
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  get: ^4.7.2
+  intl: ^0.20.2
+  shared_preferences: ^2.3.3
+  qr_code_scanner_plus: ^2.0.10+1
+  pin_code_fields: ^8.0.1 
+  flutter_native_splash: ^2.4.4
+  flutter_svg: ^2.2.0
+  vector_graphics: ^1.1.19
+  lottie: ^3.3.1
+  dotted_line: ^3.2.3
+  image_picker: ^1.1.2
+  pdf: ^3.11.3
+  path_provider: ^2.0.1
+  open_file: ^3.1.0
+
+  esc_pos_utils_plus: ^2.0.4
+  permission_handler: ^12.0.1
+  sunmi_printer_plus: ^4.1.0
+  esc_pos_printer_plus: ^0.1.1
+  thermal_printer_plus: ^1.0.11
+  
+  # drift: ^2.27.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+  build_runner: ^2.5.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/langs/
+    - assets/animations/
+
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto_Condensed-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Roboto_Condensed-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Roboto_Condensed-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Roboto_Condensed-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Roboto_Condensed-Bold.ttf
+          weight: 700
+          
+scripts:
+  clean: flutter clean && flutter pub get
+  cpr: rps clean && Flutter run
