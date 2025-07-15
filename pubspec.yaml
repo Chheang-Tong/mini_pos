@@ -30,7 +30,7 @@ dependencies:
   permission_handler: ^12.0.1
   sunmi_printer_plus: ^4.1.0
   esc_pos_printer_plus: ^0.1.1
-  thermal_printer_plus: ^1.0.11
+#  thermal_printer_plus: ^1.0.11 //not spp on mac
   
   # drift: ^2.27.0
 
@@ -43,11 +43,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
   assets:
     - assets/images/
     - assets/icons/
     - assets/langs/
     - assets/animations/
+    - assets/fonts/
 
   fonts:
     - family: Roboto
@@ -65,4 +67,4 @@ flutter:
           
 scripts:
   clean: flutter clean && flutter pub get
-  cpr: rps clean && Flutter run
+  cpr: rps clean && flutter run

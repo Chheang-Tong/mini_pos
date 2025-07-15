@@ -16,6 +16,18 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
+  void testSunmiPrint() async {
+    final type = await PrinterService.getPrinterType();
+    print("🖨 Printer type: $type");
+
+    if (type == 'sunmi') {
+      await PrinterService.printText("Hello from Sunmi POS! 🧾");
+    } else {
+      print("❌ Printer not supported.");
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -52,42 +64,45 @@ class _OrderScreenState extends State<OrderScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           GestureDetector(
-                            onTap: () async {
-                              final type =
-                                  await PrinterService.getPrinterType();
-                              print(type);
+                            onTap: () {
+                              testSunmiPrint();
                             },
                             child: Text('Invoice Nº #36', style: boldOverLarge),
                           ),
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                              vertical: Dimensions.largeMagin,
-                            ),
-                            padding: EdgeInsets.all(Dimensions.largePadding),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                Dimensions.largeRadius,
+                          GestureDetector(
+                            onTap:(){
+                              PrinterService.printText("Hello Sunmi 👋🖨️");
+                            },
+                            child: Container(
+                              margin: EdgeInsets.symmetric(
+                                vertical: Dimensions.largeMagin,
                               ),
-                              color: ColorResources.whiteColor,
-                            ),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset('assets/images/cash.svg'),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    'Cash',
-                                    style: semiBoldMediumLarge,
-                                  ),
+                              padding: EdgeInsets.all(Dimensions.largePadding),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                  Dimensions.largeRadius,
                                 ),
-                                Spacer(),
-                                Text(
-                                  '+\$40.00',
-                                  style: semiBoldMediumLarge.copyWith(
-                                    color: ColorResources.successColor,
+                                color: ColorResources.whiteColor,
+                              ),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset('assets/images/cash.svg'),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      'Cash',
+                                      style: semiBoldMediumLarge,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  Spacer(),
+                                  Text(
+                                    '+\$40.00',
+                                    style: semiBoldMediumLarge.copyWith(
+                                      color: ColorResources.successColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           Container(

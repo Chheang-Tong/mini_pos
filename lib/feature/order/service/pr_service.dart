@@ -9,8 +9,7 @@ class PrinterService {
     try {
       final result = await platform.invokeMethod<String>('getPrinterType');
       return result ?? 'generic';
-    } catch (e) {
-      print('Fail');
+    } catch (_) {
       return 'generic';
     }
   }
@@ -18,7 +17,7 @@ class PrinterService {
   static Future<void> printText(String text) async {
     try {
       final bool success = await platform.invokeMethod("printText", {
-        "text": text ,
+        "text": text
       });
       print("Print: $success");
     } on PlatformException catch (e) {
