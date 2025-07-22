@@ -21,7 +21,42 @@ class PrinterService {
       });
       print("Print: $success");
     } on PlatformException catch (e) {
-      print("❌ Print failed: ${e.message}");
+      print("Print failed: ${e.message}");
     }
   }
+
+  static Future<void> printSomething() async {
+    try {
+      final isConnected = await platform.invokeMethod('checkPrinter');
+      if (!isConnected) {
+        print('❌ Printer not connected');
+        return;
+      }
+
+      await platform.invokeMethod('printText', {'text': 'Hello Sunmi'});
+    } catch (e) {
+      print('❌ Error printing: $e');
+    }
+  }
+  static Future<void> checkPrinterStatus() async {
+    await Future.delayed(Duration(seconds: 2)); // Wait for binding to complete
+    try {
+      final isConnected = await platform.invokeMethod<bool>('checkPrinter') ?? false;
+      print('Printer connected: $isConnected');
+    } catch (e) {
+      print('❌ Error checking printer: $e');
+    }
+  }
+  static Future<void>test()async{
+    final result = await platform.invokeMethod("printText", {
+      "data": {
+        "text": "Hello Sunmi",
+        "align": "CENTER",
+        "bold": true,
+        "fontSize": 28
+      }
+    });
+
+  }
+
 }

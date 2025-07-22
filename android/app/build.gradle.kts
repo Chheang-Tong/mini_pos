@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.minipos_app"
     compileSdk = 35
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -39,7 +39,8 @@ android {
     }
 }
 dependencies {
-    implementation("com.sunmi:printerlibrary:1.0.15")
+    implementation("com.sunmi:printerlibrary:1.0.23")
+    implementation("com.sunmi:printerx:1.0.17")
 }
 
 

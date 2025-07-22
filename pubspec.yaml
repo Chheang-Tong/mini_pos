@@ -42,6 +42,11 @@ dev_dependencies:
   build_runner: ^2.5.4
 
 flutter:
+#  plugin:
+#    platforms:
+#      android:
+#        package: com.example.minipos_app
+#        pluginClass: SunmiPrinterPlusPlugin
   uses-material-design: true
 
   assets:

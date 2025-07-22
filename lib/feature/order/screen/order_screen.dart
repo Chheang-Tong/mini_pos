@@ -4,10 +4,12 @@ import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:minipos_app/common/commen.dart';
 import 'package:minipos_app/feature/order/service/pr_service.dart';
 import '../../../core/core.dart';
+import '../service/test.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -16,16 +18,6 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  void testSunmiPrint() async {
-    final type = await PrinterService.getPrinterType();
-    print("🖨 Printer type: $type");
-
-    if (type == 'sunmi') {
-      await PrinterService.printText("Hello from Sunmi POS! 🧾");
-    } else {
-      print("❌ Printer not supported.");
-    }
-  }
 
 
   @override
@@ -65,7 +57,7 @@ class _OrderScreenState extends State<OrderScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              testSunmiPrint();
+                              Get.to(Test());
                             },
                             child: Text('Invoice Nº #36', style: boldOverLarge),
                           ),

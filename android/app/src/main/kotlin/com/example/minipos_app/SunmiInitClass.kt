@@ -1,4 +1,5 @@
 package com.example.minipos_app
+//package br.com.brasizza.sunmi_printer_plus
 
 import android.content.Context
 import android.util.Log
