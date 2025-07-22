@@ -46,8 +46,8 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/icons/
-    - assets/langs/
+#    - assets/icons/
+#    - assets/langs/
     - assets/animations/
     - assets/fonts/
 
@@ -67,4 +67,4 @@ flutter:
           
 scripts:
   clean: flutter clean && flutter pub get
-  cpr: rps clean && flutter run
+  cr: rps clean && flutter run
