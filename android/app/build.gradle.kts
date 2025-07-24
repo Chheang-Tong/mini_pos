@@ -37,10 +37,30 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+//    subprojects {
+//        val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
+//        project.layout.buildDirectory.value(newSubprojectBuildDir)
+//    }
+
 }
 dependencies {
-    implementation("com.sunmi:printerlibrary:1.0.23")
-    implementation("com.sunmi:printerx:1.0.17")
+//    implementation(files("libs/SmartPos-1.8.1_R231213.jar"))
+//    implementation(files("libs/core-3.2.1.jar"))
+//    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
+}
+
+
+subprojects {
+    afterEvaluate {
+        if (plugins.hasPlugin("com.android.library")) {
+            extensions.configure<com.android.build.gradle.LibraryExtension>("android") {
+                if (namespace == null) {
+                    namespace = group.toString()
+                }
+            }
+        }
+    }
+    project.evaluationDependsOn(":app")
 }
 
 

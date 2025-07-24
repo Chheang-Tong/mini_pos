@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../common/commen.dart';
+import '../../../common/common.dart';
 import '../../../core/core.dart';
 
 class ProfileUpdate extends StatefulWidget {

@@ -1,15 +1,16 @@
+// import 'dart:convert';
+
 import 'package:dotted_line/dotted_line.dart';
-import 'package:esc_pos_printer_plus/esc_pos_printer_plus.dart';
-import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
+// import 'package:esc_pos_printer_plus/esc_pos_printer_plus.dart';
+// import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:minipos_app/common/commen.dart';
-import 'package:minipos_app/feature/order/service/pr_service.dart';
-import '../../../core/core.dart';
 import '../service/test.dart';
+import '/common/common.dart';
+// import '/feature/order/service/pr_service.dart';
+import '../../../core/core.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -18,7 +19,7 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-
+  // String get app=>"Ver${AppInfo.of(context!).package.version.toString()}";
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,11 @@ class _OrderScreenState extends State<OrderScreen> {
         backgroundColor: ColorResources.whiteColor,
         title: Row(
           children: [
-            Text('All Order:', style: boldOverLarge),
+            GestureDetector(
+              onTap: (){
+                Get.to(Test());
+              },
+                child: Text('All Order:', style: boldOverLarge)),
             Padding(
               padding: const EdgeInsets.all(4.0),
               child: Text('4', style: boldOverLarge),
@@ -57,13 +62,13 @@ class _OrderScreenState extends State<OrderScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Get.to(Test());
+                              // Get.to(Test());
                             },
                             child: Text('Invoice Nº #36', style: boldOverLarge),
                           ),
                           GestureDetector(
                             onTap:(){
-                              PrinterService.printText("Hello Sunmi 👋🖨️");
+
                             },
                             child: Container(
                               margin: EdgeInsets.symmetric(
@@ -176,7 +181,7 @@ class _OrderScreenState extends State<OrderScreen> {
                               backgroundColor: ColorResources.darkColor,
                             ),
                             onPressed: () async {
-                              await PrinterService.printText('text');
+                              // await PrinterService.printText('text');
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,

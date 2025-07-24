@@ -1,10 +1,10 @@
 class UrlContainer {
-  static const String domainUrl = 'https://crm.codexcambodia.com';
-  static const String baseUrl = '$domainUrl/flutex_admin_api/';
+  static const String domainUrl = 'https://api-uat.pintel.biz';
+  static const String baseUrl = '$domainUrl/api/backend/v1/';
   static const String downloadUrl = '$domainUrl/download/file';
   static const String uploadPath = 'uploads';
-  static const String ticketAttachmentUrl =
-      '$domainUrl/download/preview_image?path=$uploadPath/ticket_attachments/';
+  // static const String ticketAttachmentUrl =
+  //     '$domainUrl/download/preview_image?path=$uploadPath/ticket_attachments/';
 
   static RegExp emailValidatorRegExp =
       RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
@@ -15,8 +15,9 @@ class UrlContainer {
   static const String forgotPasswordUrl = 'auth/forgot-password';
 
   // Pages
-  static const String overviewUrl = 'overview';
-  static const String dashboardUrl = 'dashboard';
+  static const String dashboardUrl = 'mini-pos/dashboard';
+  static const String productUrl='mini-pos/product';
+
   static const String profileUrl = 'profile';
   static const String customersUrl = 'customers';
   static const String contactsUrl = 'contacts';

@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:minipos_app/core/core.dart';
 
-import '../../../common/commen.dart';
+import '../../../common/common.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});

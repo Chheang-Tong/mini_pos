@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:minipos_app/common/commen.dart';
+import 'package:minipos_app/common/common.dart';
 
 import '../../../core/core.dart';
 import '../../feature.dart';
