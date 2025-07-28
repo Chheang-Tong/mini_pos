@@ -33,7 +33,11 @@ class _NavbarScreenState extends State<NavbarScreen> {
       builder: (controller) {
         return Scaffold(
           backgroundColor: Colors.black12,
-          body: controller.screens[controller.selectedIndex],
+          //to show data not reload again when change
+          body: IndexedStack(
+            index: controller.selectedIndex,
+            children: controller.screens,
+          ),
           extendBody: true,
           bottomNavigationBar: Container(
             padding: EdgeInsets.symmetric(horizontal: 26),
