@@ -6,7 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final sharedPreferences = await SharedPreferences.getInstance();
-  Get.lazyPut(() => sharedPreferences);
+  // Get.lazyPut(() => sharedPreferences);
+  Get.put<SharedPreferences>(sharedPreferences, permanent: true);
   runApp(const MyApp());
 }
 

@@ -18,13 +18,13 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   void initState() {
-    Get.put(ApiService());
+    Get.put(ApiService(sharedPreferences: Get.find()));
     Get.put(AuthRepo(apiService: Get.find()));
     Get.put(AuthController(authRepo: Get.find()));
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    // Get.find<AuthController>().remember = false;
-    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    Get.find<AuthController>().remember = false;
+    });
   }
 
   @override
@@ -107,6 +107,8 @@ class _AuthScreenState extends State<AuthScreen> {
                          if(formKey.currentState!.validate()){
                            controller.login();
                          }
+                          // Get.toNamed(RouteHelper.navbarScreen);
+
                         },
                         child: Text(
                           'Login',

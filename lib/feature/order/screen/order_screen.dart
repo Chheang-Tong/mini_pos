@@ -1,15 +1,10 @@
-// import 'dart:convert';
 
 import 'package:dotted_line/dotted_line.dart';
-// import 'package:esc_pos_printer_plus/esc_pos_printer_plus.dart';
-// import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../service/test.dart';
 import '/common/common.dart';
-// import '/feature/order/service/pr_service.dart';
 import '../../../core/core.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -19,7 +14,7 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  // String get app=>"Ver${AppInfo.of(context!).package.version.toString()}";
+  int selectIndex=0;
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +29,83 @@ class _OrderScreenState extends State<OrderScreen> {
               onTap: (){
                 Get.to(Test());
               },
-                child: Text('All Order:', style: boldOverLarge)),
+                child: Text('All Order:', style: boldOverLarge)
+            ),
             Padding(
               padding: const EdgeInsets.all(4.0),
               child: Text('4', style: boldOverLarge),
             ),
           ],
+        ),
+        action: GestureDetector(
+          onTap: (){
+            customBottomSheet(
+              height: size.height * 0.4 ,
+              // isScrollControlled: false,
+              width: size.width,
+              context: context,
+              horizontal: Dimensions.largePadding,
+              body: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                    },
+                    child: Text('Filter', style: boldOverLarge),
+                  ),
+                  ...List.generate(3, (index){
+                    return GestureDetector(
+                      onTap: (){
+                        setState(() {
+                          selectIndex=index;
+                        });
+                      },
+                      child: Container(
+                          margin: EdgeInsets.symmetric(
+                            vertical: Dimensions.defaultMagin,
+                          ),
+                          padding: EdgeInsets.all(Dimensions.largePadding),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(Dimensions.largeRadius),
+                            border:selectIndex==index?  Border.all(
+                              width: 1,
+                              color:ColorResources.primary10
+                            ):Border(),
+                            color:selectIndex==index?  ColorResources.primary5:ColorResources.whiteColor,
+                          ),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Today',
+                                  style: semiBoldMediumLarge,
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                  'july 24,2025',
+                                  style: semiBoldMediumLarge
+                              ),
+                            ],
+                          )
+                      ),
+                    );
+                  }),
+
+                ],
+              ),
+            );
+          },
+          child: Container(
+            padding: EdgeInsets.all(Dimensions.defaultPadding),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(Dimensions.defaultRadius),
+              color: ColorResources.primary10,
+
+            ),child: Text('July 24,2025',style: mediumLarge.copyWith(color:ColorResources.primaryColor),),
+          ),
         ),
       ),
       body: Container(
@@ -47,11 +113,12 @@ class _OrderScreenState extends State<OrderScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ...List.generate(8, (index) {
+              SizedBox(height: 8,),
+              ...List.generate(16, (index) {
                 return GestureDetector(
                   onTap: () {
                     customBottomSheet(
-                      height: size.height * 0.9,
+                      height: size.height * 0.7,
                       // isScrollControlled: false,
                       width: size.width,
                       context: context,
@@ -81,23 +148,12 @@ class _OrderScreenState extends State<OrderScreen> {
                                 ),
                                 color: ColorResources.whiteColor,
                               ),
-                              child: Row(
+                              child: Column(
                                 children: [
-                                  SvgPicture.asset('assets/images/cash.svg'),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'Cash',
-                                      style: semiBoldMediumLarge,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Text(
-                                    '+\$40.00',
-                                    style: semiBoldMediumLarge.copyWith(
-                                      color: ColorResources.successColor,
-                                    ),
-                                  ),
+                                  listName(assets: 'assets/images/profile.svg', name: 'Name', value: 'Wep Richard'),
+                                  listName(assets: 'assets/images/phone.svg', name: 'Phone', value: '012345678'),
+                                  listName(assets: 'assets/images/cash.svg', name: 'Cash', value: '+\$40.00',color: ColorResources.successColor),
+
                                 ],
                               ),
                             ),
@@ -117,7 +173,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                 Text('Item Detail', style: semiBoldMediumLarge),
                                 Container(
                                   width: size.width,
-                                  constraints: BoxConstraints(maxHeight: 135),
+                                  constraints: BoxConstraints(maxHeight: 90),
 
                                   child: SingleChildScrollView(
                                     child: Column(
@@ -217,23 +273,16 @@ class _OrderScreenState extends State<OrderScreen> {
                     child: Column(
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              'Customer 0${index + 1}',
-                              style: semiBoldMediumLarge,
-                            ),
-                            Text('\$40.00', style: mediumLarge),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '59 St 534, Phnom Penh, Cambodia',
-                              style: regularDefault,
+                            Expanded(
+                              child: Text(
+                                'INV-1004',
+                                style: semiBoldMediumLarge,
+                              ),
                             ),
                             Container(
+                              margin: EdgeInsets.symmetric(horizontal: Dimensions.defaultMagin),
                               padding: EdgeInsets.symmetric(
                                 horizontal: Dimensions.space6,
                                 vertical: Dimensions.space2,
@@ -253,8 +302,10 @@ class _OrderScreenState extends State<OrderScreen> {
                                 ),
                               ),
                             ),
+                            Text('\$40.00', style: mediumLarge),
                           ],
                         ),
+
                       ],
                     ),
                   ),
@@ -268,7 +319,7 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 
-  listCount({required String title, required String value}) {
+  listCount({required String title, required String value,}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: Dimensions.smallPadding),
       child: Row(
@@ -284,6 +335,28 @@ class _OrderScreenState extends State<OrderScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  listName({required String assets, required String name, required String value,Color color= ColorResources.darkColor}){
+    return Row(
+      children: [
+        SvgPicture.asset(assets),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            name,
+            style: semiBoldMediumLarge,
+          ),
+        ),
+        Spacer(),
+        Text(
+          value,
+          style: semiBoldMediumLarge.copyWith(
+            color:color,
+          ),
+        ),
+      ],
     );
   }
 }

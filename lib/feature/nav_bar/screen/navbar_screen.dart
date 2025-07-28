@@ -17,7 +17,7 @@ class _NavbarScreenState extends State<NavbarScreen> {
   @override
   void initState() {
     super.initState();
-    //Make it Get to Orer Screen
+    //Make it Get to Order Screen
     Future.delayed(Duration.zero, () {
       final int? initialIndex = Get.arguments as int?;
       if (initialIndex != null) {
@@ -50,13 +50,13 @@ class _NavbarScreenState extends State<NavbarScreen> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                icButon(
+                icButton(
                   iconPath: 'assets/images/product.svg',
                   title: 'Product',
                   index: 0,
                   controller: controller,
                 ),
-                icButon(
+                icButton(
                   iconPath: 'assets/images/cart.svg',
                   title: 'Cart',
                   index: 1,
@@ -80,13 +80,13 @@ class _NavbarScreenState extends State<NavbarScreen> {
                     ),
                   ),
                 ),
-                icButon(
+                icButton(
                   iconPath: 'assets/images/order.svg',
                   title: 'Order',
                   index: 2,
                   controller: controller,
                 ),
-                icButon(
+                icButton(
                   iconPath: 'assets/images/profile.svg',
                   title: 'Profile',
                   index: 3,
@@ -100,7 +100,7 @@ class _NavbarScreenState extends State<NavbarScreen> {
     );
   }
 
-  icButon({
+  icButton({
     required String iconPath,
     required String title,
     required int index,
@@ -125,7 +125,7 @@ class _NavbarScreenState extends State<NavbarScreen> {
                 iconPath,
                 color: isSelected
                     ? ColorResources.primaryColor
-                    : ColorResources.darkColor,
+                    : ColorResources.dark75,
               ),
             ),
             SizedBox(height: 4),

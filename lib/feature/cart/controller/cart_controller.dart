@@ -17,7 +17,7 @@ class CartController extends GetxController {
   List<String> bank = ['ABA', 'ACLEDA', 'WOORY'];
   @override
   void onInit() {
-    searchController.text = 'K_boy .09876543';
+    searchController.text = 'Walk-in Customer';
     discountCtr.text = '0';
     super.onInit();
   }

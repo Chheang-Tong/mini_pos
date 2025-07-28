@@ -17,14 +17,16 @@ class DateConverter {
 
   static String convertIsoToString(String dateTime) {
     DateTime time = convertStringToDatetime(dateTime);
-    String result = DateFormat('dd MMM yyyy hh:mm aa').format(time);
+    String result = DateFormat(
+      'dd MMM yyyy hh:mm aa',
+    ).format(time);
     return result;
   }
 
   static DateTime isoStringToLocalDate(String dateTime) {
-    return DateFormat(
-      'yyyy-MM-ddTHH:mm:ss.SSS',
-    ).parse(dateTime, true).toLocal();
+    return DateFormat('yyyy-MM-ddTHH:mm:ss.SSS')
+        .parse(dateTime, true)
+        .toLocal();
   }
 
   static String isoToLocalTimeSubtract(String dateTime) {
@@ -72,16 +74,13 @@ class DateConverter {
 
   static String nextReturnTime(String dateTime) {
     //final date = DateFormat('yyyy-MM-dd HH-mm-ss').parse(dateTime);
-    final date = DateFormat(
-      "dd MMM, yyyy hh:mm a",
-    ).format(DateTime.parse(dateTime));
+    final date =
+    DateFormat("dd MMM, yyyy hh:mm a").format(DateTime.parse(dateTime));
     return date;
   }
 
-  static String getFormatedSubtractTime(
-    String time, {
-    bool numericDates = false,
-  }) {
+  static String getFormatedSubtractTime(String time,
+      {bool numericDates = false}) {
     final date1 = DateTime.now();
     final isoDate = isoStringToLocalDate(time);
     final difference = date1.difference(isoDate);

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:minipos_app/feature/feature.dart';
+import 'package:minipos_app/feature/profile/widget/test.dart';
 import '/core/core.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -25,17 +26,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               Row(
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(Dimensions.space12),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        width: 3,
-                        color: ColorResources.dark10,
+                  GestureDetector(
+                    onTap: (){
+                      Get.to(SearchPage());
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(Dimensions.space12),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          width: 3,
+                          color: ColorResources.dark10,
+                        ),
+                        color: ColorResources.dark5,
                       ),
-                      color: ColorResources.dark5,
+                      child: SvgPicture.asset('assets/images/user.svg'),
                     ),
-                    child: SvgPicture.asset('assets/images/user.svg'),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(

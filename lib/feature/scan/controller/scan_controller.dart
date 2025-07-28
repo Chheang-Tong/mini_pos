@@ -5,15 +5,18 @@ import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 class ScanController extends GetxController
     with GetSingleTickerProviderStateMixin {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  late QRViewController qrcontroller;
+  late QRViewController qrController;
   String qrText = '';
   bool isProcessing = false;
   bool isFlashOn = false;
+  RxList<String> qrList=<String>[].obs;
+  int get qrCount => qrList.length;
 
   late AnimationController animationController;
   late Animation<double> animation;
    double cutOutHeight = 148;
    double cutOutWidth = 249;
+
   @override
   void onInit() {
     animationController = AnimationController(
@@ -28,34 +31,51 @@ class ScanController extends GetxController
   }
 
   void onQRViewCreated(QRViewController controller) {
-    qrcontroller = controller;
-    qrcontroller.getFlashStatus().then((value) {
+    qrController = controller;
+    qrController.getFlashStatus().then((value) {
       isFlashOn = value ?? false;
     });
-    qrcontroller.scannedDataStream.listen((scanData) {
+    qrController.scannedDataStream.listen((scanData) {
       if (!isProcessing) {
         isProcessing = true;
 
         qrText = scanData.code!;
+        if(qrText.isNotEmpty && !qrList.contains(qrText)){
+          qrList.add(qrText);
+          print("Add: $qrText");
+        }
+        else{
+          print("Duplicate ignore: $qrText");
+        }
 
         // ignore: avoid_print
         print(qrText);
-        Get.back(result: qrText);
+        print(qrList);
+        // Get.back(result: qrText);
+
+        Future.delayed(Duration(milliseconds: 500),(){
+          isProcessing=false;
+        });
       }
     });
   }
 
   void toggleFlash() async {
-    await qrcontroller.toggleFlash();
-    final flashStatus = await qrcontroller.getFlashStatus();
+    await qrController.toggleFlash();
+    final flashStatus = await qrController.getFlashStatus();
 
     isFlashOn = flashStatus ?? false;
+    update();
+  }
+
+  void clearHistory(){
+    qrList.clear();
   }
 
   @override
   void onClose() {
     animationController.dispose();
-    qrcontroller.dispose();
+    qrController.dispose();
     super.onClose();
   }
 }

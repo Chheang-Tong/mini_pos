@@ -6,7 +6,7 @@ import '../../feature.dart';
 class NavbarController extends GetxController {
   int selectedIndex = 0;
   List<Widget> screens = [
-    const PosScreen(),
+    const ProScreen(),
     const CartScreen(),
     const OrderScreen(),
     const ProfileScreen(),

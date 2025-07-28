@@ -14,6 +14,7 @@ class AuthController extends GetxController {
   String? email;
   String? password;
   bool isSubmitLoading=false;
+  bool remember=false;
   TextEditingController emailCtr = TextEditingController(text: 'mama@gmail.com');
   TextEditingController passwordCtr = TextEditingController(text: 'Manin@123');
   final FocusNode emailFN = FocusNode();
@@ -31,10 +32,13 @@ class AuthController extends GetxController {
       LoginModel loginModel =LoginModel.fromJson(
           jsonDecode(responseModel.responseJson),
       );
+
       Get.offAndToNamed(RouteHelper.welcomeScreen);
+      check(loginModel);
+
     }
     else{
-print(responseModel.status);
+      CustomSnackBar.error(errorList: [responseModel.status.toString()]);
     }
 
     isSubmitLoading=false;
@@ -43,6 +47,31 @@ print(responseModel.status);
   void clearTextField() {
     passwordCtr.text = '';
     emailCtr.text = '';
+    if (remember) {
+      remember = false;
+    }
     update();
   }
+
+  Future<void>check(LoginModel loginModel)async{
+    if(remember){
+      await authRepo.apiService.sharedPreferences.setBool(SharedPreferenceHelper.rememberMeKey, true);
+    }else{
+      await authRepo.apiService.sharedPreferences.setBool(SharedPreferenceHelper.rememberMeKey, false);
+    }
+    await authRepo.apiService.sharedPreferences.setString(
+        SharedPreferenceHelper.accessTokenKey,
+        loginModel.accessToken ?? '');
+
+    // Get.offAndToNamed(RouteHelper.authScreen);
+    if(remember){
+      changeRememberMe();
+    }
+
+  }
+  changeRememberMe() {
+    remember = !remember;
+    update();
+  }
+
 }

@@ -280,10 +280,7 @@ class _CartScreenState extends State<CartScreen> {
                                             width: size.width * 0.3,
                                             child: Column(
                                               children: [
-                                                listDetail(
-                                                  title: 'Unit',
-                                                  value: 'Box',
-                                                ),
+
                                                 listDetail(
                                                   title: 'Price',
                                                   value: '\$5.00',
@@ -534,10 +531,10 @@ class _CartScreenState extends State<CartScreen> {
                                             letterSpacing: 0.02,
                                           ),
                                         ),
-                                        Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: ColorResources.primaryColor,
-                                        ),
+                                        // Icon(
+                                        //   Icons.keyboard_arrow_down,
+                                        //   color: ColorResources.primaryColor,
+                                        // ),
                                       ],
                                     ),
                                   ),
