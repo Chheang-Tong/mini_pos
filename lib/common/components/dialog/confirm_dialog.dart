@@ -29,7 +29,7 @@ confirmClear({required Function onTap}) {
                   horizontal: Dimensions.space48,
                   vertical: Dimensions.space10,
                 ),
-                margin: EdgeInsets.only(right: Dimensions.defaultMagin),
+                margin: EdgeInsets.only(right: Dimensions.defaultMargin),
                 decoration: BoxDecoration(
                   color: ColorResources.dark5,
                   borderRadius: BorderRadius.circular(Dimensions.defaultRadius),
@@ -52,7 +52,7 @@ confirmClear({required Function onTap}) {
                   horizontal: Dimensions.space48,
                   vertical: Dimensions.space10,
                 ),
-                margin: EdgeInsets.only(left: Dimensions.defaultMagin),
+                margin: EdgeInsets.only(left: Dimensions.defaultMargin),
                 decoration: BoxDecoration(
                   color: ColorResources.primaryColor,
                   borderRadius: BorderRadius.circular(Dimensions.defaultRadius),

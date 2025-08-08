@@ -60,13 +60,13 @@ class Dimensions {
     vertical: space20,
     horizontal: space15,
   );
-  static const EdgeInsets maginH16V8 = EdgeInsets.symmetric(
+  static const EdgeInsets marginH16V8 = EdgeInsets.symmetric(
     horizontal: space16,
     vertical: space8,
   );
-  static const EdgeInsets bodyMagin = EdgeInsets.symmetric(horizontal: space16);
+  static const EdgeInsets bodyMargin = EdgeInsets.symmetric(horizontal: space16);
 
-  static const double extrasmallRadius = 2;
+  static const double extraSmallRadius = 2;
   static const double smallRadius = 4;
   static const double defaultRadius = 8;
   static const double largeRadius = 16;
@@ -76,18 +76,18 @@ class Dimensions {
   static const double groupRadius = 20;
   static const double textToTextSpace = 8;
 
-  static const double extrasmallPadding = 2;
+  static const double extraSmallPadding = 2;
   static const double smallPadding = 4;
   static const double defaultPadding = 8;
   static const double mediumPadding = 12;
   static const double largePadding = 16;
   static const double extraLargePadding = 24;
 
-  static const double extrasmallMagin = 2;
-  static const double smallMagin = 4;
-  static const double defaultMagin = 8;
-  static const double mediumMagin = 12;
-  static const double largeMagin = 16;
+  static const double extraSmallMargin = 2;
+  static const double smallMargin = 4;
+  static const double defaultMargin = 8;
+  static const double mediumMargin = 12;
+  static const double largeMargin = 16;
 
   static const double expandedHeights = 350.0;
   static const double collapsedHeights = kToolbarHeight;

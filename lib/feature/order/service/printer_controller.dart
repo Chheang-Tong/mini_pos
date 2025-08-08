@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart' show rootBundle, ByteData, Uint8List;
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 
 class TestPrint {

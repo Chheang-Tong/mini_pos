@@ -14,6 +14,7 @@ class RouteHelper {
   static const String resetScreen = "/reset_screen";
   static const String authScreen = "/auth_screen";
   static const String resetPWScreen = '/reset_password';
+  static const String filterScreen = '/filter_view';
 
   List<GetPage> routes = [
     GetPage(name: splashScreen, page: () => const SplashScreen()),
@@ -23,5 +24,6 @@ class RouteHelper {
     GetPage(name: scanScreen, page: () => ScanScreen()),
     GetPage(name: profileUpdate, page:()=>ProfileUpdate()),
     GetPage(name: resetPWScreen, page:()=>ResetPassword()),
+    GetPage(name: filterScreen, page: ()=>FilterScreen())
   ];
 }

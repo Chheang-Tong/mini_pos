@@ -3,11 +3,14 @@ import 'package:get/get.dart';
 import 'package:minipos_app/core/core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/service/di_service.dart' as services;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final sharedPreferences = await SharedPreferences.getInstance();
-  // Get.lazyPut(() => sharedPreferences);
+  Get.lazyPut(() => sharedPreferences);
   Get.put<SharedPreferences>(sharedPreferences, permanent: true);
+  Map<String, Map<String, String>> languages = await services.init();
   runApp(const MyApp());
 }
 

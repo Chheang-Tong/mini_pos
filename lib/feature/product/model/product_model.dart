@@ -49,7 +49,7 @@ class Product {
     dynamic slug,
     String? name,
     String? code,
-    int? price,
+    dynamic price,
     bool? isPin,
     String? priceFormat,
     int? quantity,
@@ -132,7 +132,7 @@ class Product {
   dynamic _slug;
   String? _name;
   String? _code;
-  int? _price;
+  dynamic _price;
   bool? _isPin;
   String? _priceFormat;
   int? _quantity;
@@ -157,7 +157,7 @@ class Product {
   dynamic get slug => _slug;
   String? get name => _name;
   String? get code => _code;
-  int? get price => _price;
+  dynamic get price => _price;
   bool? get isPin => _isPin;
   String? get priceFormat => _priceFormat;
   int? get quantity => _quantity;

@@ -10,7 +10,7 @@ class WelRepo{
       'end_date':''
     };
     String url='${UrlContainer.baseUrl}${UrlContainer.dashboardUrl}';
-    ResponseModel responseModel =await apiService.request(url,'get',map, passHeader:true);
+    ResponseModel responseModel =await apiService.request(url,'get',map,cartUuid:null, passHeader:true);
     return responseModel;
   }
 }

@@ -14,7 +14,7 @@ class ProductRepo{
       'sort_by':sort,
     };
     final url =Uri.parse('${UrlContainer.baseUrl}${UrlContainer.productUrl}').replace(queryParameters:map);
-    ResponseModel responseModel =await apiService.request(url.toString(), Method.getMethod, null,passHeader: true);
+    ResponseModel responseModel =await apiService.request(url.toString(), Method.getMethod, null,cartUuid: null,passHeader: true);
     return responseModel;
   }
 }

@@ -14,11 +14,13 @@ class ProScreen extends StatefulWidget {
 }
 
 class _ProScreenState extends State<ProScreen> {
+  final CartController cartController=Get.put(CartController(cartRepo: Get.find()));
   @override
   void initState() {
     Get.put(ApiService(sharedPreferences: Get.find()));
     Get.put(ProductRepo(apiService: Get.find()));
-    final controller = Get.put(ProductController(productRepo: Get.find()));
+    Get.put(CartRepo(apiService: Get.find())); // <-- ADD THIS
+    final controller = Get.put(ProductController(productRepo: Get.find(),));
     controller.isLoading = true;
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -63,7 +65,9 @@ class _ProScreenState extends State<ProScreen> {
               ),
             ),
             action: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(RouteHelper.filterScreen);
+              },
               child: Container(
                 height: 40,
                 width: 40,
@@ -80,7 +84,8 @@ class _ProScreenState extends State<ProScreen> {
             ?  Loading()
             : RefreshIndicator(
             onRefresh: ()async{
-              await controller.initialData();
+              controller.reset();
+              await controller.initialData(shouldLoad: false);
             },
               child: CustomScrollView(
                 controller: controller.scrollController,
@@ -264,7 +269,7 @@ class _ProScreenState extends State<ProScreen> {
                                 children: [
                                   SizedBox(height: 12),
                                   Text(
-                                    '${pro.name}',
+                                    '${pro.name}   ${pro.id}',
                                     style: mediumLarge,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -336,7 +341,12 @@ class _ProScreenState extends State<ProScreen> {
                                       ),
                                       Spacer(),
                                       GestureDetector(
-                                        onTap: () {},
+                                        onTap: ()async {
+                                         bool added=await cartController.addToCart(productId: pro.id!, qty: 1);
+                                          if(added){
+                                            addToCardDialog();
+                                          }
+                                        },
                                         child: SvgPicture.asset(
                                           'assets/images/cart.svg',
                                           color: ColorResources.primaryColor,
@@ -359,7 +369,7 @@ class _ProScreenState extends State<ProScreen> {
                   child: controller.isMoreLoading
                       ? Column(
                         children: [
-                          Loading(),
+                          CircularProgressIndicator(),
                           SizedBox(height: 100)
                         ],
                       )

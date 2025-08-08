@@ -50,6 +50,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import '../model/product_model.dart';
 import '/common/common.dart';
 import '/feature/feature.dart';
 
@@ -57,6 +58,9 @@ class ProductController extends GetxController {
   ProductRepo productRepo;
   ProductController({required this.productRepo});
   final ScrollController scrollController=ScrollController();
+  TextEditingController fromController = TextEditingController(),
+      toController = TextEditingController();
+  FocusNode fromNode = FocusNode(), toNode = FocusNode();
   ProductModel productModel = ProductModel();
   List<Product> products = [];
 
@@ -89,12 +93,50 @@ class ProductController extends GetxController {
     'Beverages',
     'Snacks',
   ];
+  List<String> items = ['Discount'];
+
+  List<String> sorts = ['New', 'In Stock', 'Out of Stock'];
 
   bool isLoading = true;
   bool isSubmitLoading = false;
   var currentPage = 1;
   var lastPage = 1;
-  bool isMoreLoading = false; // <-- Flag for loading more
+  bool isMoreLoading = false;
+
+
+  String? selectedValue;
+  int? selectSort ;
+  sort(int index) {
+   selectSort=index;
+    update();
+  }
+
+  nullValue() {
+    selectedValue = null;
+    update();
+  }
+
+  bool get isFilterEmpty {
+    return fromController.text.isEmpty &&
+        toController.text.isEmpty &&
+        selectedValue == null &&
+        selectSort == null;
+  }
+
+
+
+  void reset() {
+    fromController.text = '';
+    toController.text = '';
+    selectedValue = null;
+    selectSort = null;
+    update();
+  }
+
+  void onChanged(String newValue) {
+    selectedValue = newValue;
+    update();
+  }
 
   /// Initial load
   Future<void> initialData({bool shouldLoad = true}) async {
@@ -107,30 +149,44 @@ class ProductController extends GetxController {
     update();
   }
 
+  void filterProducts() async {
+    currentPage = 1;
+    lastPage=1;
+    products.clear();
+    scrollController.jumpTo(0);
+    update();
+    await loadProduct();
+  }//not use yet
 
   Future<void> loadProduct({bool loadMore = false}) async {
     if (loadMore) {
       if (currentPage >= lastPage) return;
       isMoreLoading = true;
       update();
-      await Future.delayed(const Duration(seconds: 5));
+      await Future.delayed(const Duration(seconds:2));//highlight only need delete when use
       currentPage++;
 
     } else {
       currentPage = 1;
+      lastPage=1;
       products.clear();
     }
-    ResponseModel responseModel =
-    await productRepo.getProduct(limit: 10, page: currentPage);
+    String startPrice = fromController.text.isNotEmpty ? fromController.text : '';
+    String endPrice = toController.text.isNotEmpty ? toController.text : '';
+    String promoId = selectedValue ?? '';
+    String sortBy = selectSort != null ? sorts[selectSort!] : '';
+    ResponseModel responseModel =await productRepo.getProduct(
+        limit: 10,
+        page: currentPage,
+        start: startPrice,
+        end: endPrice,
+        promoId: promoId,
+        sort: sortBy,
+    );
     if (responseModel.status) {
-      // productModel =
-      //     ProductModel.fromJson(jsonDecode(responseModel.responseJson));
-      // lastPage = productModel.meta!.lastPage ?? lastPage;
-      // if (productModel.data != null) {
-      //   products.addAll(productModel.data!);
-      // }
-      var newData = ProductModel.fromJson(jsonDecode(responseModel.responseJson));
 
+      //store to List for show more data
+      var newData = ProductModel.fromJson(jsonDecode(responseModel.responseJson));
       lastPage = newData.meta?.lastPage ?? lastPage;
       if (newData.data != null && newData.data!.isNotEmpty) {
         products.addAll(newData.data!);

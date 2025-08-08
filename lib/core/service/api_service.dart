@@ -13,7 +13,7 @@ class ApiService extends GetxService{
   ApiService({required this.sharedPreferences});
 
   Future<ResponseModel> request(String uri, String method, Map<String, dynamic>? params,
-      {bool passHeader = false})async{
+      {String? cartUuid, bool passHeader = false})async{
     Uri url=Uri.parse(uri);
     http.Response response;
 
@@ -21,7 +21,12 @@ class ApiService extends GetxService{
       if(method==Method.postMethod){
         if(passHeader){
           initToken();
-          response=await http.post(url,body: params,headers: {
+
+          final body = params != null ? jsonEncode(params) : null;
+          response=await http.post(url,body: body,headers: {
+            if(cartUuid!=null)
+              'cart-uuid':cartUuid,
+            'Content-Type':'application/json',
             'Accept':'application/json',
             'Authorization':'Bearer $token',
           });
@@ -30,15 +35,22 @@ class ApiService extends GetxService{
         }
       }else if(method==Method.putMethod){
         initToken();
-        response = await http.put(url,body: params,headers: {
-          'Content-Type':'application/x-www-form-urlencode; charset=UTF-8',
+
+        final body = params != null ? jsonEncode(params) : null;
+        response = await http.put(url,body: body,headers: {
+          'Content-Type':'application/json',
+          if(cartUuid!=null)
+            'cart-uuid':cartUuid,
           'Accept':'application/json',
           'Authorization':'Bearer $token',
         });
       }else if(method==Method.deleteMethod){
         initToken();
+
         response=await http.delete(url,headers: {
-          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          // 'Content-Type': 'application/json',
+          if(cartUuid!=null)
+            'cart-uuid':cartUuid,
           'Accept':'application/json',
           'Authorization':'Bearer $token',
         });
@@ -47,19 +59,23 @@ class ApiService extends GetxService{
           initToken();
           response =await http.get(
               url,
-
               headers: {
             'Accept':'application/json',
+            'Content-Type': 'application/json',
+
+             if(cartUuid!=null)
+                'cart-uuid':cartUuid,
             'Authorization':'Bearer $token',
           });
         }else{
           initToken();
           response =await http.get(url);
 
-          print('dart:${token}');
+          debugPrint('dart:$token');
         }
       }
       if (kDebugMode) {
+        print('====> Uuid: $cartUuid');
         print('====> url: ${uri.toString()}');
         print('====> method: $method');
         print('====> params: ${params.toString()}');

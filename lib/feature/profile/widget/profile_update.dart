@@ -77,7 +77,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                                           ),
                                         )
                                       : SvgPicture.asset(
-                                          'assets/image/user.svg',
+                                          'assets/images/user.svg',
                                           height: 50,
                                         ),
                                 ),

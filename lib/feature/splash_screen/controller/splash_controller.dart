@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 class SplashController extends GetxController {
   bool isLoading = true;
 
-  var leftPosition = (-350.0).obs;
-  var rightPosition = (350.0).obs;
+  var leftPosition = (-370.0).obs;
+  var rightPosition = (370.0).obs;
   var topPosition = 0.4.obs;
   var dasTop = 2.0.obs;
   var opacityA = 0.0.obs;

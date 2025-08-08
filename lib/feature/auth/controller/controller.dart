@@ -15,10 +15,18 @@ class AuthController extends GetxController {
   String? password;
   bool isSubmitLoading=false;
   bool remember=false;
-  TextEditingController emailCtr = TextEditingController(text: 'mama@gmail.com');
-  TextEditingController passwordCtr = TextEditingController(text: 'Manin@123');
-  final FocusNode emailFN = FocusNode();
-  final FocusNode passwordFN = FocusNode();
+  String? oldPasswordError;
+  final formKey = GlobalKey<FormState>();
+
+
+  final  TextEditingController
+    emailCtr = TextEditingController(text: 'mama@gmail.com'),
+    passwordCtr = TextEditingController(text: 'Manin@1234'),
+    newPasswordCtr=TextEditingController(),
+    oldPasswordCtr=TextEditingController(),
+    confirmPasswordCtr=TextEditingController();
+
+  final FocusNode emailFN = FocusNode(), passwordFN = FocusNode(),oldPasswordFN=FocusNode(),newPasswordFN=FocusNode(),confirmPasswordFN=FocusNode();
 
   Future <void> login()async{
     isSubmitLoading=true;
@@ -71,6 +79,25 @@ class AuthController extends GetxController {
   }
   changeRememberMe() {
     remember = !remember;
+    update();
+  }
+
+  Future<void>changePw()async{
+    isSubmitLoading=true;
+    update();
+    ResponseModel responseModel= await authRepo.updatePassword(oldPassword: oldPasswordCtr.text, newPassword: newPasswordCtr.text, passwordConfirm: confirmPasswordCtr.text);
+    if(responseModel.status){
+      oldPasswordError=null;
+      CustomSnackBar.success(successList: [responseModel.message]);
+    }
+    else{
+      oldPasswordError=responseModel.message;
+      CustomSnackBar.error(errorList: [oldPasswordError!]);
+      formKey.currentState!.validate();
+
+    }
+
+    isSubmitLoading=false;
     update();
   }
 

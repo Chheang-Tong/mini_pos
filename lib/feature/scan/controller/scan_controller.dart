@@ -42,15 +42,15 @@ class ScanController extends GetxController
         qrText = scanData.code!;
         if(qrText.isNotEmpty && !qrList.contains(qrText)){
           qrList.add(qrText);
-          print("Add: $qrText");
+          debugPrint("Add: $qrText");
         }
         else{
-          print("Duplicate ignore: $qrText");
+          debugPrint("Duplicate ignore: $qrText");
         }
 
-        // ignore: avoid_print
-        print(qrText);
-        print(qrList);
+
+        debugPrint(qrText);
+        debugPrint(qrList.toString());
         // Get.back(result: qrText);
 
         Future.delayed(Duration(milliseconds: 500),(){

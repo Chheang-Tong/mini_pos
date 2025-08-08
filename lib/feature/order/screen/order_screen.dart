@@ -63,7 +63,7 @@ class _OrderScreenState extends State<OrderScreen> {
                       },
                       child: Container(
                           margin: EdgeInsets.symmetric(
-                            vertical: Dimensions.defaultMagin,
+                            vertical: Dimensions.defaultMargin,
                           ),
                           padding: EdgeInsets.all(Dimensions.largePadding),
                           decoration: BoxDecoration(
@@ -139,7 +139,7 @@ class _OrderScreenState extends State<OrderScreen> {
                             },
                             child: Container(
                               margin: EdgeInsets.symmetric(
-                                vertical: Dimensions.largeMagin,
+                                vertical: Dimensions.largeMargin,
                               ),
                               padding: EdgeInsets.all(Dimensions.largePadding),
                               decoration: BoxDecoration(
@@ -261,7 +261,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   },
                   child: Container(
                     margin: EdgeInsets.symmetric(
-                      vertical: Dimensions.defaultMagin,
+                      vertical: Dimensions.defaultMargin,
                     ),
                     padding: EdgeInsets.all(Dimensions.largePadding),
                     decoration: BoxDecoration(
@@ -282,7 +282,7 @@ class _OrderScreenState extends State<OrderScreen> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.symmetric(horizontal: Dimensions.defaultMagin),
+                              margin: EdgeInsets.symmetric(horizontal: Dimensions.defaultMargin),
                               padding: EdgeInsets.symmetric(
                                 horizontal: Dimensions.space6,
                                 vertical: Dimensions.space2,

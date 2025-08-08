@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:minipos_app/common/common.dart';
+import '/common/common.dart';
 
 import '../../../core/core.dart';
 import '../../feature.dart';
@@ -14,8 +14,18 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   final NavbarController navbarController = Get.put(NavbarController());
-  final CartController cartController = Get.put(CartController());
-  bool isEmpty = false;
+
+  @override
+  void initState() {
+    Get.put(ApiService(sharedPreferences: Get.find()));
+    Get.put(CartRepo(apiService: Get.find()));
+    final controller=Get.put(CartController(cartRepo: Get.find()));
+    controller.loading=true;
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp){
+      controller.initialData();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,52 +174,57 @@ class _CartScreenState extends State<CartScreen> {
                 onChanged: (text) {},
               ),
             ),
-            action: Container(
-              height: 40,
-              // width: 86,
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(left: Dimensions.space12),
-              padding: EdgeInsets.symmetric(
-                horizontal: Dimensions.largePadding,
-                vertical: Dimensions.defaultPadding,
-              ),
-              decoration: BoxDecoration(
-                color: ColorResources.primary5,
-                borderRadius: BorderRadius.circular(
-                  Dimensions.extraLargeRadius,
+            action: GestureDetector(
+              onTap: (){},
+              child: Container(
+                height: 40,
+                // width: 86,
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(left: Dimensions.space12),
+                padding: EdgeInsets.symmetric(
+                  horizontal: Dimensions.largePadding,
+                  vertical: Dimensions.defaultPadding,
                 ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SvgPicture.asset(
-                    'assets/images/add.svg',
-                    color: ColorResources.primaryColor,
+                decoration: BoxDecoration(
+                  color: ColorResources.primary5,
+                  borderRadius: BorderRadius.circular(
+                    Dimensions.extraLargeRadius,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: Dimensions.space4),
-                    child: Text(
-                      'Add',
-                      style: mediumLarge.copyWith(
-                        color: ColorResources.primaryColor,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/images/add.svg',
+                      color: ColorResources.primaryColor,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: Dimensions.space4),
+                      child: Text(
+                        'Add',
+                        style: mediumLarge.copyWith(
+                          color: ColorResources.primaryColor,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-          body: isEmpty
-              ? EmptyCart(
-                  onPressed: () {
-                    if (Get.currentRoute == RouteHelper.navbarScreen) {
-                      navbarController.changeIndex(0);
-                    } else {
-                      Get.toNamed(RouteHelper.navbarScreen, arguments: 0);
-                    }
-                  },
-                )
-              : Container(
+          body:controller.loading
+              ?Loading()
+              : controller.cartModel.data==null
+                  ? EmptyCart(
+                      onPressed: () {
+                        if (Get.currentRoute == RouteHelper.navbarScreen) {
+                          navbarController.changeIndex(0);
+                        } else {
+                          Get.toNamed(RouteHelper.navbarScreen, arguments: 0);
+                        }
+                      },
+                    )
+                  : Container(
                   margin: EdgeInsets.symmetric(horizontal: Dimensions.space16),
                   child: Column(
                     children: [
@@ -224,16 +239,16 @@ class _CartScreenState extends State<CartScreen> {
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 4,
                               ),
-                              child: Text('3', style: semiBoldLarge),
+                              child: Text('${controller.cartModel.data!.totalProductsI}', style: semiBoldLarge),
                             ),
                             Spacer(),
                             GestureDetector(
-                              onTap: () {
-                                isEmpty = true;
-                                setState(() {});
+                              onTap: () async{
+                              await  controller.rmAllProduct();
+                              await controller.clearUuid();
                               },
                               child: SvgPicture.asset(
-                                'assets/images/trush.svg',
+                                'assets/images/trash.svg',
                               ),
                             ),
                           ],
@@ -243,7 +258,8 @@ class _CartScreenState extends State<CartScreen> {
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
-                              ...List.generate(8, (index) {
+                              ...List.generate(controller.cartModel.data!.products!.length, (index) {
+                                final product=controller.cartModel.data!.products![index];
                                 return Container(
                                   padding: EdgeInsets.symmetric(
                                     vertical: Dimensions.space8,
@@ -256,107 +272,237 @@ class _CartScreenState extends State<CartScreen> {
                                       ),
                                     ),
                                   ),
-                                  child: Column(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              'Honey Cream',
-                                              style: mediumLarge,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                          Icon(Icons.close),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          SizedBox(
-                                            width: size.width * 0.3,
-                                            child: Column(
+                                     GestureDetector(
+                                       onTap:(){
+                                         debugPrint('delete');
+                                         },
+                                       child: Container(
+                                          padding: const EdgeInsets.only(right: 4),
+                                          child: Icon(Icons.close),
+                                        ),
+                                     ),
+                                      Expanded(
+                                        child: Column(
+                                          children: [
+                                            Row(
                                               children: [
-
-                                                listDetail(
-                                                  title: 'Price',
-                                                  value: '\$5.00',
+                                                Text(
+                                                  '${product.name} ${product.cartId}',
+                                                  style: mediumLarge,
+                                                  overflow: TextOverflow.ellipsis,
                                                 ),
-                                                listDetail(
-                                                  title: 'Sub Total',
-                                                  value: '\$5.00',
+                                                Spacer(),
+                                                Row(
+                                                  children: [
+                                                    GestureDetector(
+                                                      onTap:()=>controller.minus(index: index),
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                          borderRadius:
+                                                          BorderRadius.circular(Dimensions.smallRadius),
+                                                          color: ColorResources.dark5,
+                                                        ),
+                                                        child: Icon(Icons.remove, color: ColorResources.darkColor),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      margin: EdgeInsets.symmetric(
+                                                        horizontal: Dimensions.space4,
+                                                      ),
+                                                      padding: EdgeInsets.symmetric(
+                                                        horizontal:
+                                                        Dimensions.space14,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(Dimensions.smallRadius,),
+                                                        color: ColorResources.dark5,
+                                                      ),
+                                                      child: Text(
+                                                        '${product.quantity}',
+                                                        style: semiBoldMediumLarge.copyWith(color: ColorResources.darkColor),
+                                                      ),
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap:()=> controller.plus(index: index),
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                          borderRadius:
+                                                          BorderRadius.circular(
+                                                            Dimensions
+                                                                .smallRadius,
+                                                          ),
+                                                          color: ColorResources.dark5,
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.add,
+                                                          color: ColorResources
+                                                              .primaryColor,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ],
                                             ),
-                                          ),
-                                          Row(
-                                            children: [
-                                              GestureDetector(
-                                                onTap: controller.decrementQty,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          Dimensions
-                                                              .smallRadius,
-                                                        ),
-                                                    color: ColorResources.dark5,
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                SizedBox(
+                                                  width: size.width * 0.3,
+                                                  child: Column(
+                                                    children: [
+
+                                                      listDetail(
+                                                        title: 'Price',
+                                                        value: '\$ ${product.price}',
+                                                      ),
+                                                      listDetail(
+                                                        title: 'Sub Total',
+                                                        value: '\$ ${product.total} ',
+                                                      ),
+                                                    ],
                                                   ),
-                                                  child: Icon(
-                                                    Icons.remove,
-                                                    color: ColorResources
-                                                        .darkColor,
-                                                  ),
                                                 ),
-                                              ),
-                                              Container(
-                                                margin: EdgeInsets.symmetric(
-                                                  horizontal: Dimensions.space4,
-                                                ),
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      Dimensions.space14,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
+                                                GestureDetector(
+                                                  onTap:(){
+                                                    discountDialog(
+                                                      content: GetBuilder<CartController>(
+                                                        builder: (controller) {
+                                                          return Column(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            children: [
+                                                              Container(
+                                                                padding: EdgeInsets.symmetric(
+                                                                  vertical: Dimensions.space8,
+                                                                  horizontal: Dimensions.space3,
+                                                                ),
+                                                                decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.circular(Dimensions.defaultRadius),
+                                                                  border: Border.all(width: 1, color:ColorResources.dark10),
+                                                                ),
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                  children: [
+                                                                    ...List.generate(
+                                                                      controller.discount.length,
+                                                                          (index) {
+                                                                        final entry = controller.discount.entries.toList()[index];
+                                                                        return GestureDetector(
+                                                                          onTap: () => controller.isSelect(index),
+                                                                          child: Container(
+                                                                            margin: EdgeInsets.symmetric(horizontal: Dimensions.space5,),
+                                                                            padding: EdgeInsets.symmetric(
+                                                                              horizontal: Dimensions.largePadding,
+                                                                              vertical: Dimensions.defaultPadding,
+                                                                            ),
+                                                                            decoration: BoxDecoration(
+                                                                              borderRadius: BorderRadius.circular(Dimensions.smallRadius),
+                                                                              color: controller.discountIndex == index
+                                                                                  ? ColorResources.darkColor
+                                                                                  : ColorResources.dark5,
+                                                                            ),
+                                                                            child: Row(
+                                                                              children: [
+                                                                                SvgPicture.asset(
+                                                                                  entry.key,
+                                                                                  color: controller.discountIndex == index
+                                                                                      ? ColorResources.whiteColor
+                                                                                      : ColorResources.darkColor,
+                                                                                ),
+                                                                                SizedBox(width: Dimensions.space8,),
+                                                                                Text(
+                                                                                  entry.value,
+                                                                                  style: regularLarge.copyWith(
+                                                                                    color: controller.discountIndex == index
+                                                                                        ? ColorResources.whiteColor
+                                                                                        : ColorResources.darkColor,
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: Dimensions.space8,
+                                                              ),
+                                                              CustomTextField(
+                                                                style: regularLarge,
+                                                                controller: controller.discountCtr,
+                                                                onChanged: (onChanged) {},
+                                                                noneBorder: true,
+                                                                fillColor: ColorResources.dark5,
+                                                                inputAction: TextInputAction.done,
+                                                                textInputType: TextInputType.numberWithOptions(),
+                                                              ),
+                                                              SizedBox(height: Dimensions.space8),
+                                                              Divider(color: ColorResources.dark10),
+                                                            ],
+                                                          );
+                                                        },
+                                                      ),
+                                                      onTap: () async{
+                                                        final discountValue = double.tryParse(controller.discountCtr.text) ?? 0;
+                                                        final productPrice = product.price ?? 0;
+
+                                                        if (controller.isFixedDiscount) {
+
+                                                          if (discountValue >= productPrice) {
+                                                            CustomSnackBar.error(
+                                                              errorList: ['Discounted price must be less than $productPrice'],
+                                                            );
+                                                            return;
+                                                          }
+                                                        }
+
+                                                        await controller.disCountItem(
+                                                          discount: controller.discountCtr.text,
+                                                          cartId: '${product.cartId}',
+                                                          isFix: controller.isFixedDiscount,
+                                                        );
+
+                                                        Get.back();
+                                                        controller.clear();
+
+                                                        debugPrint('${product.cartId} ${controller.isFixedDiscount} $productPrice ');
+                                                      },
+                                                    );
+                                                    },
+                                                  child: Container(
+                                                    padding: EdgeInsets.symmetric(
+                                                      horizontal: Dimensions.space8,
+                                                      vertical: Dimensions.space2,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
                                                       BorderRadius.circular(
                                                         Dimensions.smallRadius,
                                                       ),
-                                                  color: ColorResources.dark5,
-                                                ),
-                                                child: Text(
-                                                  controller.qty.toString(),
-                                                  style: semiBoldMediumLarge
-                                                      .copyWith(
-                                                        color: ColorResources
-                                                            .darkColor,
-                                                      ),
-                                                ),
-                                              ),
-                                              GestureDetector(
-                                                onTap: controller.incrementQty,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          Dimensions
-                                                              .smallRadius,
-                                                        ),
-                                                    color: ColorResources.dark5,
-                                                  ),
-                                                  child: Icon(
-                                                    Icons.add,
-                                                    color: ColorResources
-                                                        .primaryColor,
+                                                      color: ColorResources.primary5,
+                                                    ),
+                                                    child: Text(
+                                                      product.isDiscountFixed==true
+                                                        ? 'Discount : \$ ${product.discount??0}'
+                                                        : 'Discount : ${(double.tryParse(product.discount?.toString() ?? '0') ?? 0).toStringAsFixed(0)} %',
+                                                      style: semiBoldMediumLarge.copyWith(color: ColorResources.primaryColor),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -378,8 +524,8 @@ class _CartScreenState extends State<CartScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            listCheck(title: 'Item count', value: '6'),
-                            listCheck(title: 'Subtotal', value: '\$40.00'),
+                            listCheck(title: 'Item count', value:'${controller.cartModel.data!.totalQuantityI}'),
+                            listCheck(title: 'Subtotal', value: '\$${(double.tryParse(controller.cartModel.data?.subTotalI.toString()??'0')??0).toStringAsFixed(2)}'),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -395,91 +541,46 @@ class _CartScreenState extends State<CartScreen> {
                                                 Container(
                                                   padding: EdgeInsets.symmetric(
                                                     vertical: Dimensions.space8,
-                                                    horizontal:
-                                                        Dimensions.space3,
+                                                    horizontal: Dimensions.space3,
                                                   ),
                                                   decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          Dimensions
-                                                              .defaultRadius,
-                                                        ),
-                                                    border: Border.all(
-                                                      width: 1,
-                                                      color:
-                                                          ColorResources.dark10,
-                                                    ),
+                                                    borderRadius: BorderRadius.circular(Dimensions.defaultRadius),
+                                                    border: Border.all(width: 1, color:ColorResources.dark10),
                                                   ),
                                                   child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
                                                       ...List.generate(
-                                                        controller
-                                                            .discount
-                                                            .length,
+                                                        controller.discount.length,
                                                         (index) {
-                                                          final entry = controller
-                                                              .discount
-                                                              .entries
-                                                              .toList()[index];
+                                                          final entry = controller.discount.entries.toList()[index];
                                                           return GestureDetector(
-                                                            onTap: () =>
-                                                                controller
-                                                                    .dizSelect(
-                                                                      index,
-                                                                    ),
+                                                            onTap: () => controller.isSelect(index),
                                                             child: Container(
-                                                              margin: EdgeInsets.symmetric(
-                                                                horizontal:
-                                                                    Dimensions
-                                                                        .space5,
-                                                              ),
+                                                              margin: EdgeInsets.symmetric(horizontal: Dimensions.space5,),
                                                               padding: EdgeInsets.symmetric(
-                                                                horizontal:
-                                                                    Dimensions
-                                                                        .largePadding,
-                                                                vertical: Dimensions
-                                                                    .defaultPadding,
+                                                                horizontal: Dimensions.largePadding,
+                                                                vertical: Dimensions.defaultPadding,
                                                               ),
                                                               decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius.circular(
-                                                                      Dimensions
-                                                                          .smallRadius,
-                                                                    ),
-                                                                color:
-                                                                    controller
-                                                                            .discountIndex ==
-                                                                        index
-                                                                    ? ColorResources
-                                                                          .darkColor
-                                                                    : ColorResources
-                                                                          .dark5,
+                                                                borderRadius: BorderRadius.circular(Dimensions.smallRadius),
+                                                                color: controller.discountIndex == index
+                                                                    ? ColorResources.darkColor
+                                                                    : ColorResources.dark5,
                                                               ),
                                                               child: Row(
                                                                 children: [
                                                                   SvgPicture.asset(
                                                                     entry.key,
-                                                                    color:
-                                                                        controller.discountIndex ==
-                                                                            index
-                                                                        ? ColorResources
-                                                                              .whiteColor
-                                                                        : ColorResources
-                                                                              .darkColor,
+                                                                    color: controller.discountIndex == index
+                                                                        ? ColorResources.whiteColor
+                                                                        : ColorResources.darkColor,
                                                                   ),
-                                                                  SizedBox(
-                                                                    width: Dimensions
-                                                                        .space8,
-                                                                  ),
+                                                                  SizedBox(width: Dimensions.space8,),
                                                                   Text(
                                                                     entry.value,
                                                                     style: regularLarge.copyWith(
-                                                                      color:
-                                                                          controller.discountIndex ==
-                                                                              index
+                                                                      color: controller.discountIndex == index
                                                                           ? ColorResources.whiteColor
                                                                           : ColorResources.darkColor,
                                                                     ),
@@ -498,28 +599,25 @@ class _CartScreenState extends State<CartScreen> {
                                                 ),
                                                 CustomTextField(
                                                   style: regularLarge,
-                                                  controller:
-                                                      controller.discountCtr,
+                                                  controller: controller.discountCtr,
                                                   onChanged: (onChanged) {},
                                                   noneBorder: true,
-                                                  fillColor:
-                                                      ColorResources.dark5,
-                                                  inputAction:
-                                                      TextInputAction.done,
-                                                  textInputType:
-                                                      TextInputType.numberWithOptions(),
+                                                  fillColor: ColorResources.dark5,
+                                                  inputAction: TextInputAction.done,
+                                                  textInputType: TextInputType.numberWithOptions(),
                                                 ),
-                                                SizedBox(
-                                                  height: Dimensions.space8,
-                                                ),
-                                                Divider(
-                                                  color: ColorResources.dark10,
-                                                ),
+                                                SizedBox(height: Dimensions.space8),
+                                                Divider(color: ColorResources.dark10),
                                               ],
                                             );
                                           },
                                         ),
-                                        onTap: () {},
+                                        onTap: () async{
+                                          await controller.disCountInvoice(discount: controller.discountCtr.text, isFix: controller.isFixedDiscount);
+                                          // await Future.delayed(const Duration(milliseconds: 200));
+                                          Get.back();
+                                          controller.clear();
+                                        },
                                       );
                                     },
                                     child: Row(
@@ -531,16 +629,15 @@ class _CartScreenState extends State<CartScreen> {
                                             letterSpacing: 0.02,
                                           ),
                                         ),
-                                        // Icon(
-                                        //   Icons.keyboard_arrow_down,
-                                        //   color: ColorResources.primaryColor,
-                                        // ),
+
                                       ],
                                     ),
                                   ),
                                 ),
                                 Text(
-                                  '\$0.00',
+                                  controller.cartModel.data!.isDiscountFixedI==true
+                                      ? '\$ ${controller.cartModel.data!.cartDiscountI??0}'
+                                      : '${(double.tryParse(controller.cartModel.data!.cartDiscountI.toString()) ??0).toStringAsFixed(0)} %',
                                   style: boldMediumLarge.copyWith(
                                     color: ColorResources.primaryColor,
                                     letterSpacing: 0.02,
@@ -558,7 +655,7 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '\$40.00',
+                                  '\$ ${(double.tryParse(controller.cartModel.data?.totalI.toString()??'0')??0).toStringAsFixed(2)}',
                                   style: semiBoldMediumLarge.copyWith(
                                     color: ColorResources.darkColor,
                                   ),
@@ -606,7 +703,7 @@ class _CartScreenState extends State<CartScreen> {
                                                             ),
                                                       ),
                                                       Text(
-                                                        '\$19.00',
+                                                        '\$ ${(double.tryParse(controller.cartModel.data?.totalI.toString()??'0')??0).toStringAsFixed(2)}',
                                                         style: regularLarge,
                                                       ),
                                                     ],
@@ -757,9 +854,7 @@ class _CartScreenState extends State<CartScreen> {
                                       builder: (controller) {
                                         return controller.methodIndex == 0
                                             ? Row(
-                                                // mainAxisAlignment:
-                                                //     MainAxisAlignment
-                                                //         .spaceBetween,
+
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Expanded(
@@ -774,7 +869,7 @@ class _CartScreenState extends State<CartScreen> {
                                                             ),
                                                         margin: EdgeInsets.only(
                                                           right: Dimensions
-                                                              .defaultMagin,
+                                                              .defaultMargin,
                                                         ),
                                                         decoration: BoxDecoration(
                                                           color: ColorResources
@@ -813,7 +908,7 @@ class _CartScreenState extends State<CartScreen> {
                                                             ),
                                                         margin: EdgeInsets.only(
                                                           left: Dimensions
-                                                              .defaultMagin,
+                                                              .defaultMargin,
                                                         ),
                                                         decoration: BoxDecoration(
                                                           color: ColorResources
